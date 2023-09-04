@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.weatherds.screens.MainScreen
+import com.example.weatherds.ui.theme.WeatherDsTheme
 import org.json.JSONObject
 
 const val API_WEATHER = "608c9bc731984dcc81d112401230409"
@@ -30,7 +32,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-        Greeting(cityName = "Moscow", this )
+        WeatherDsTheme {
+            MainScreen()
+        }
         }
     }
 }
@@ -92,7 +96,7 @@ private fun weatherResult(cityName: String, state: MutableState<String> ,context
 
         },{
                 error ->
-                Log.d ("MyLog", "Error $error")
+                state.value = "УПС $error"
         }
 
     )
