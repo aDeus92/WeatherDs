@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -18,11 +19,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.weatherds.screens.MainScreen
+import com.example.weatherds.screens.MainCard
+import com.example.weatherds.screens.TabLayout
 import com.example.weatherds.ui.theme.WeatherDsTheme
 import org.json.JSONObject
 
@@ -33,7 +38,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             WeatherDsTheme {
-                MainScreen()
+                Image(
+                    painter = painterResource(id = R.drawable.weatherbackground),
+                    contentDescription = "background",
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .alpha(0.9f),
+                    contentScale = ContentScale.FillBounds
+                )
+                Column {
+                    MainCard()
+                    TabLayout()
+                }
+
             }
         }
     }

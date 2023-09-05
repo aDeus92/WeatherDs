@@ -1,6 +1,6 @@
 package com.example.weatherds.screens
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,18 +8,24 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,23 +34,15 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.weatherds.R
 import com.example.weatherds.ui.theme.BlueLight
-
+import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
 @Composable
 
-fun MainScreen() {
-    Image(
-        painter = painterResource(id = R.drawable.weatherbackground),
-        contentDescription = "background",
-        modifier = Modifier
-            .fillMaxSize()
-            .alpha(0.9f),
-        contentScale = ContentScale.FillBounds
-    )
+fun MainCard() {
+
     Column(
         modifier = Modifier
-            .fillMaxSize()
             .padding(5.dp)
     ) {
         Card(
@@ -139,6 +137,62 @@ fun MainScreen() {
                     }
                 }
 
+            }
+        }
+    }
+}
+
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun TabLayout() {
+    val tabList = listOf("Часы", "Дни")
+    val pagerState: PagerState = rememberPagerState(
+        initialPage = 0,
+        initialPageOffsetFraction = 0f
+    ) {
+       tabList.size
+    }
+    val tabIndex = pagerState.currentPage
+    val coroutineScope = rememberCoroutineScope()
+    Column(
+        modifier = Modifier
+            .padding(5.dp)
+            .clip(RoundedCornerShape(5.dp)),
+    )
+    {
+        TabRow(
+            selectedTabIndex = tabIndex,
+            containerColor = BlueLight,
+            contentColor = Color.White
+        ) {
+            tabList.forEachIndexed { index, text ->
+                Tab(
+                    selected = pagerState.currentPage == index,
+                    onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
+                    },
+                    text =
+                    {
+                        Text(text = text)
+                    }
+
+                )
+            }
+        }
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.weight(1.0f)
+        ) {
+            index ->
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ){
+                items(15){
+                    ListItem()
+                }
             }
         }
     }
