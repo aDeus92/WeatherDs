@@ -2,7 +2,6 @@ package com.example.weatherds
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
@@ -28,13 +27,14 @@ import com.example.weatherds.ui.theme.WeatherDsTheme
 import org.json.JSONObject
 
 const val API_WEATHER = "608c9bc731984dcc81d112401230409"
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-        WeatherDsTheme {
-            MainScreen()
-        }
+            WeatherDsTheme {
+                MainScreen()
+            }
         }
     }
 }
@@ -44,43 +44,45 @@ fun Greeting(cityName: String, context: Context) {
     val state = remember {
         mutableStateOf("Неизвестно")
     }
-        Column (
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+
+
+        ) {
+        Box(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxHeight(0.5f)
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Температура в $cityName = ${state.value}"
+            )
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth(),
+            contentAlignment = Alignment.BottomCenter
 
-
-        ){
-            Box(
+        ) {
+            Button(
                 modifier = Modifier
-                    .fillMaxHeight(0.5f)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ){
-                Text(text = "Температура в $cityName = ${state.value}"
-                )
-            }
-            Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.BottomCenter
+                    .fillMaxWidth()
+                    .padding(10.dp),
 
-            ){
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
-
-                    onClick = {
-                        weatherResult(cityName, state, context )
+                onClick = {
+                    weatherResult(cityName, state, context)
 
                 }) {
                 Text(text = "Refresh")
-                }
             }
         }
+    }
 }
-private fun weatherResult(cityName: String, state: MutableState<String> ,context: Context){
+
+private fun weatherResult(cityName: String, state: MutableState<String>, context: Context) {
     val url = "https://api.weatherapi.com/v1/current.json" +
             "?key=$API_WEATHER&" +
             "q=$cityName" +
@@ -89,14 +91,12 @@ private fun weatherResult(cityName: String, state: MutableState<String> ,context
     val stringRequest = StringRequest(
         Request.Method.GET,
         url,
-        {
-                response ->
+        { response ->
             val obj = JSONObject(response)
-            state.value=obj.getJSONObject("current").getString("temp_c") + "C"
+            state.value = obj.getJSONObject("current").getString("temp_c") + "C"
 
-        },{
-                error ->
-                state.value = "УПС $error"
+        }, { error ->
+            state.value = "УПС $error"
         }
 
     )
