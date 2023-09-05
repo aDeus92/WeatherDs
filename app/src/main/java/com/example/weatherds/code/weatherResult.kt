@@ -8,7 +8,7 @@ import com.android.volley.toolbox.Volley
 import com.example.weatherds.API_WEATHER
 import org.json.JSONObject
 
-private fun weatherResult(cityName: String, state: MutableState<String>, context: Context) {
+private fun weatherResult(cityName: String, state: MutableState<String>, context: Context): String {
     val url = "https://api.weatherapi.com/v1/current.json" +
             "?key=$API_WEATHER&" +
             "q=$cityName" +
@@ -27,4 +27,5 @@ private fun weatherResult(cityName: String, state: MutableState<String>, context
 
     )
     queue.add(stringRequest)
+    return state.value
 }
