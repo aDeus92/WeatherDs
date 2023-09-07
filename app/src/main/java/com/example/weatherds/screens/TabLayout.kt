@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -18,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.weatherds.data.WeatherModule
 import com.example.weatherds.ui.theme.BlueLight
 import kotlinx.coroutines.launch
 
@@ -63,13 +65,35 @@ fun TabLayout() {
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.weight(1.0f)
-        ) {
-                index ->
+        ) { index ->
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
-            ){
-                items(15){
-                    ListItem()
+            ) {
+                itemsIndexed(
+                    listOf(
+                        WeatherModule(
+                            "Ставрополь",
+                            "12:03",
+                            "",
+                            "Partly cloudy",
+                            "//cdn.weatherapi.com/weather/64x64/day/116.png",
+                            "35°",
+                            "10°",
+                            "13:02"
+                        ),
+                        WeatherModule(
+                            "Лондон",
+                            "12:03",
+                            "30°",
+                            "Partly cloudy",
+                            "//cdn.weatherapi.com/weather/64x64/day/116.png",
+                            "",
+                            "",
+                            ""
+                        )
+                    )
+                ) { _, item ->
+                    ListItem(item)
                 }
             }
         }

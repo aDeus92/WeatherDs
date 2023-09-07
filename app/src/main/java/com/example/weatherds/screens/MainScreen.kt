@@ -23,12 +23,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.weatherds.R
+import com.example.weatherds.data.WeatherModule
 import com.example.weatherds.ui.theme.BlueLight
 
-@Preview(showBackground = true)
 @Composable
 
-fun MainCard() {
+fun MainCard(item:WeatherModule) {
 
     Column(
         modifier = Modifier.padding(5.dp)
@@ -51,7 +51,7 @@ fun MainCard() {
                 ) {
                     Text(
 
-                        text = "04 Сент 2023 17:12",
+                        text = item.timeLast,
                         style = TextStyle(fontSize = 15.sp),
                         color = Color.White,
                         modifier = Modifier.padding(
@@ -60,7 +60,7 @@ fun MainCard() {
 
                     )
                     AsyncImage(
-                        model = "https://cdn.weatherapi.com/weather/64x64/day/116.png",
+                        model = "https:${item.icon}",
                         contentDescription = "img",
                         modifier = Modifier
                             .padding(
@@ -70,14 +70,14 @@ fun MainCard() {
                     )
                 }
                 Text(
-                    text = "Ставрополь", style = TextStyle(fontSize = 25.sp), color = Color.White
+                    text = item.city, style = TextStyle(fontSize = 25.sp), color = Color.White
                 )
                 Text(
-                    text = "26°C", style = TextStyle(fontSize = 100.sp), color = Color.White
+                    text = item.currentTemp, style = TextStyle(fontSize = 100.sp), color = Color.White
                 )
 
                 Text(
-                    text = "Воняет", style = TextStyle(fontSize = 15.sp), color = Color.White
+                    text = item.condition, style = TextStyle(fontSize = 15.sp), color = Color.White
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -94,7 +94,7 @@ fun MainCard() {
                     }
                     Text(
                         modifier = Modifier.padding(top = 20.dp),
-                        text = "20°C/28°C",
+                        text = item.currentTemp.ifEmpty { "${item.maxTemp}/${item.minTemp}" },
                         style = TextStyle(fontSize = 10.sp),
                         color = Color.White
                     )
