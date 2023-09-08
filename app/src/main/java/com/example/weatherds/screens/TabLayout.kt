@@ -14,6 +14,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,7 +26,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TabLayout() {
+fun TabLayout(daysList: MutableState<List<WeatherModule>>) {
     val tabList = listOf("Часы", "Дни")
     val pagerState: PagerState = rememberPagerState(
         initialPage = 0,
@@ -65,33 +66,12 @@ fun TabLayout() {
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.weight(1.0f)
-        ) { index ->
+        ) { _ ->
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
                 itemsIndexed(
-                    listOf(
-                        WeatherModule(
-                            "Ставрополь",
-                            "12:03",
-                            "",
-                            "Partly cloudy",
-                            "//cdn.weatherapi.com/weather/64x64/day/116.png",
-                            "35°",
-                            "10°",
-                            "13:02"
-                        ),
-                        WeatherModule(
-                            "Лондон",
-                            "12:03",
-                            "30°",
-                            "Partly cloudy",
-                            "//cdn.weatherapi.com/weather/64x64/day/116.png",
-                            "",
-                            "",
-                            ""
-                        )
-                    )
+                    daysList.value
                 ) { _, item ->
                     ListItem(item)
                 }

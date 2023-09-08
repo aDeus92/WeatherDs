@@ -13,6 +13,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,8 +30,7 @@ import com.example.weatherds.ui.theme.BlueLight
 
 @Composable
 
-fun MainCard(item:WeatherModule) {
-
+fun MainCard(weatherModule: MutableState<WeatherModule>) {
     Column(
         modifier = Modifier.padding(5.dp)
     ) {
@@ -51,7 +52,7 @@ fun MainCard(item:WeatherModule) {
                 ) {
                     Text(
 
-                        text = item.timeLast,
+                        text = weatherModule.value.timeLast,
                         style = TextStyle(fontSize = 15.sp),
                         color = Color.White,
                         modifier = Modifier.padding(
@@ -60,7 +61,7 @@ fun MainCard(item:WeatherModule) {
 
                     )
                     AsyncImage(
-                        model = "https:${item.icon}",
+                        model = "https:${weatherModule.value.icon}",
                         contentDescription = "img",
                         modifier = Modifier
                             .padding(
@@ -70,14 +71,20 @@ fun MainCard(item:WeatherModule) {
                     )
                 }
                 Text(
-                    text = item.city, style = TextStyle(fontSize = 25.sp), color = Color.White
+                    text = weatherModule.value.city,
+                    style = TextStyle(fontSize = 25.sp),
+                    color = Color.White
                 )
                 Text(
-                    text = item.currentTemp, style = TextStyle(fontSize = 100.sp), color = Color.White
+                    text = weatherModule.value.currentTemp,
+                    style = TextStyle(fontSize = 100.sp),
+                    color = Color.White
                 )
 
                 Text(
-                    text = item.condition, style = TextStyle(fontSize = 15.sp), color = Color.White
+                    text = weatherModule.value.condition,
+                    style = TextStyle(fontSize = 15.sp),
+                    color = Color.White
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -94,7 +101,8 @@ fun MainCard(item:WeatherModule) {
                     }
                     Text(
                         modifier = Modifier.padding(top = 20.dp),
-                        text = item.currentTemp.ifEmpty { "${item.maxTemp}/${item.minTemp}" },
+                        text = /*weatherModule.value.currentTemp.ifEmpty {*/
+                            weatherModule.value.maxTemp + "/" + weatherModule.value.minTemp,
                         style = TextStyle(fontSize = 10.sp),
                         color = Color.White
                     )
