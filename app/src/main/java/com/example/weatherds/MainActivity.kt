@@ -19,6 +19,7 @@ import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.weatherds.data.WeatherModule
+import com.example.weatherds.screens.DialogSearch
 import com.example.weatherds.screens.MainCard
 import com.example.weatherds.screens.TabLayout
 import com.example.weatherds.ui.theme.WeatherDsTheme
@@ -36,6 +37,9 @@ class MainActivity : ComponentActivity() {
                 val daysList = remember {
                     mutableStateOf(listOf<WeatherModule>())
                 }
+                val nameCity = remember {
+                    mutableStateOf("Stavropol")
+                }
                 val currentWeather = remember {
                     mutableStateOf(
                         WeatherModule(
@@ -50,7 +54,16 @@ class MainActivity : ComponentActivity() {
                         )
                     )
                 }
-                getData("Stavropol", this, daysList, currentWeather)
+                val dialogState = remember {
+                    mutableStateOf(false)
+                }
+                if(dialogState.value){
+                    DialogSearch(dialogState, onSubmit = {
+                        getData(it,this, daysList, currentWeather)
+                        nameCity.value=it
+                    })
+                }
+                getData(nameCity.value, this, daysList, currentWeather)
                 Image(
                     painter = painterResource(id = R.drawable.weatherbackground),
                     contentDescription = "background",
@@ -61,8 +74,13 @@ class MainActivity : ComponentActivity() {
                 )
                 Column {
 
-                    MainCard(currentWeather)
-                    TabLayout(daysList)
+                    MainCard(currentWeather, onClickSync = {
+                        getData(nameCity.value, this@MainActivity, daysList, currentWeather)
+                    },
+                        onClickSearch = {
+                            dialogState.value=true
+                        })
+                    TabLayout(daysList, currentWeather  )
                 }
 
             }

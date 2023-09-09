@@ -3,6 +3,7 @@ package com.example.weatherds.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -30,12 +31,15 @@ import com.example.weatherds.ui.theme.BlueLight
 
 @Composable
 
-fun MainCard(weatherModule: MutableState<WeatherModule>) {
+fun MainCard(
+    weatherModule: MutableState<WeatherModule>,
+    onClickSync: () -> Unit,
+    onClickSearch: () -> Unit
+) {
     Column(
         modifier = Modifier.padding(5.dp)
     ) {
         Card(
-
             modifier = Modifier.fillMaxWidth(),
             elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
             shape = RoundedCornerShape(10.dp),
@@ -76,8 +80,15 @@ fun MainCard(weatherModule: MutableState<WeatherModule>) {
                     color = Color.White
                 )
                 Text(
-                    text = weatherModule.value.currentTemp,
-                    style = TextStyle(fontSize = 100.sp),
+                    text =
+                    if (weatherModule.value.currentTemp.isEmpty())
+                        "${weatherModule.value.maxTemp}/${weatherModule.value.minTemp}" else
+                        weatherModule.value.currentTemp,
+
+                    style =
+                    if (weatherModule.value.currentTemp.isEmpty())
+                        TextStyle(fontSize = 50.sp) else
+                        TextStyle(fontSize = 100.sp),
                     color = Color.White
                 )
 
@@ -91,7 +102,7 @@ fun MainCard(weatherModule: MutableState<WeatherModule>) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(onClick = {
-                        /*TODO*/
+                        onClickSearch.invoke()
                     }) {
                         Icon(
                             painter = painterResource(id = R.drawable.search_24),
@@ -102,12 +113,12 @@ fun MainCard(weatherModule: MutableState<WeatherModule>) {
                     Text(
                         modifier = Modifier.padding(top = 20.dp),
                         text = /*weatherModule.value.currentTemp.ifEmpty {*/
-                            weatherModule.value.maxTemp + "/" + weatherModule.value.minTemp,
+                        weatherModule.value.maxTemp + "/" + weatherModule.value.minTemp,
                         style = TextStyle(fontSize = 10.sp),
                         color = Color.White
                     )
                     IconButton(onClick = {
-                        /*TODO*/
+                        onClickSync.invoke()
                     }) {
                         Icon(
                             painter = painterResource(id = R.drawable.refresh_24),

@@ -2,10 +2,8 @@ package com.example.weatherds.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -23,10 +21,12 @@ import androidx.compose.ui.unit.dp
 import com.example.weatherds.data.WeatherModule
 import com.example.weatherds.ui.theme.BlueLight
 import kotlinx.coroutines.launch
+import org.json.JSONArray
+import org.json.JSONObject
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TabLayout(daysList: MutableState<List<WeatherModule>>) {
+fun TabLayout(daysList: MutableState<List<WeatherModule>>,currentDays:MutableState<WeatherModule>) {
     val tabList = listOf("Часы", "Дни")
     val pagerState: PagerState = rememberPagerState(
         initialPage = 0,
@@ -66,16 +66,36 @@ fun TabLayout(daysList: MutableState<List<WeatherModule>>) {
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.weight(1.0f)
-        ) { _ ->
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                itemsIndexed(
-                    daysList.value
-                ) { _, item ->
-                    ListItem(item)
-                }
+        ) { index ->
+            val list = when(index){
+                0 -> getWeatherByHours(currentDays.value.hours)
+                1 -> daysList.value
+                else ->daysList.value
             }
+
+            MainList(list, currentDays)
         }
     }
 }
+    private fun getWeatherByHours(hours:String): List<WeatherModule>{
+        if (hours.isEmpty()) return listOf()
+        val hoursArray = JSONArray(hours)
+        val list = ArrayList<WeatherModule>()
+        for(i in 0 until hoursArray.length()){
+            val item = hoursArray[i] as JSONObject
+            list.add(
+                WeatherModule(
+                    "",
+                    item.getString("time"),
+                    item.getString("temp_c").toFloat().toInt().toString() + "°C",
+                    item.getJSONObject("condition").getString("text"),
+                    item.getJSONObject("condition").getString("icon"),
+                    "",
+                    "",
+                    ""
+
+                )
+            )
+        }
+        return list
+    }
