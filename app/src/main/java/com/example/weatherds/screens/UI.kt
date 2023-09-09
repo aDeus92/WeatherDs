@@ -25,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -81,9 +80,7 @@ fun ListItem(item: WeatherModule, currentDay: MutableState<WeatherModule>) {
                 )
             }
             Text(
-                text = if (item.currentTemp.isNotEmpty())
-                    item.currentTemp
-                else {
+                text = item.currentTemp.ifEmpty {
                     "${item.maxTemp}/${item.minTemp}"
                 },
                 color = Color.White,
