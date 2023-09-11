@@ -72,7 +72,7 @@ fun MainCard(
                     )
                 }
                 Text(
-                    text = weatherModule.value.city,
+                    text = translate( weatherModule.value.city),
                     style = TextStyle(fontSize = 25.sp),
                     color = Color.White
                 )
@@ -88,7 +88,7 @@ fun MainCard(
                 )
 
                 Text(
-                    text = weatherModule.value.condition,
+                    text = translate( weatherModule.value.condition),
                     style = TextStyle(fontSize = 15.sp),
                     color = Color.White
                 )
